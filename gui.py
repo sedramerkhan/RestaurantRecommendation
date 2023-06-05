@@ -2,20 +2,8 @@ from tkinter import *
 
 from PIL import ImageTk, Image
 
-BACKGROUND1 = "#5d3891"
-BACKGROUND3 = "#E0AA3E"
-BACKGROUND2 = "lightgrey"
-BUTTON = "midnightblue"
-
-
-IMAGE_HIEGHT = 400
-IMAGE_WIDTH = 400
-
-MESSAGE = [
-    "You Have To Enter Only Integers.",
-    "You Have To Enter Numbers For All Input Fields.",
-    "You Have To Enter Only Integers Between {} and {} in {}",
-]
+from restaurantRecommendation import RestaurantRecommendation
+from utils import *
 
 
 class Gui:
@@ -28,7 +16,7 @@ class Gui:
         screen_height = self.root.winfo_screenheight()
         print(screen_height, screen_width)
         # x, y = 1366, 768
-        self.root.geometry('%dx%d+%d+%d' % (screen_width / 2, screen_height * .6, screen_width / 4, screen_height / 4))
+        self.root.geometry('%dx%d+%d+%d' % (screen_width * .65, screen_height * .75, screen_width / 5, screen_height / 7))
         self.root.config(bg=BACKGROUND1)
 
     def __init__(self):
@@ -37,29 +25,53 @@ class Gui:
         self.output_value = StringVar()
         # self.output_value()
 
+        self.images_frame = Frame(self.root, bg=BACKGROUND1)
+        self.images_frame.pack(fill='x', padx=10)
+        self.labels_frame = Frame(self.root, bg=BACKGROUND1)
+        self.labels_frame.pack(fill='x', padx=10)
+
+        self.restaurant_recommendation = RestaurantRecommendation()
+
+        self.cuisine_range = self.restaurant_recommendation.cuisine_range
+        self.location_range = self.restaurant_recommendation.location_range
+        self.price_range = self.restaurant_recommendation.price_range
+        self.set_images()
+        self.set_labels()
+
         self.input_frame = Frame(self.root, bg=BACKGROUND1)
-        self.input_frame.pack(side='left', padx=5, pady=5, fill='y')
+        self.input_frame.pack(side='left', padx=5, pady=5, expand=1)#fill='y',
 
         self.cuisine = self.create_entries('Cuisine')
-        self.price = self.create_entries('Price',"K SP")
-        self.location = self.create_entries('Location',"KM")
+        self.price = self.create_entries('Price', "K SP")
+        self.location = self.create_entries('Location', "KM")
         self.button = self.create_button()
 
         self.output_frame = Frame(self.root, bg=BACKGROUND1)
-        self.output_frame.pack(side='left', padx=5, pady=5, fill='y')
+        self.output_frame.pack(side='left', padx=5, pady=5, expand=1)
 
         self.output_image = Canvas(self.output_frame, height=IMAGE_HIEGHT, width=IMAGE_WIDTH)
         self.output_image.pack(padx=5, pady=5)
 
-        self.output_label = Label(self.output_frame, textvariable=self.output_value, width=10, height=10) \
+        font = "Times 15 roman normal"
+        self.output_label = Label(self.output_frame,font=font, textvariable=self.output_value, width=28) \
             .pack(pady=5)
 
-        # todo: get these values from fuzzy class
-        self.cuisine_range = (1, 10)
-        self.location_range = (1, 40)
-        self.price_range = (10, 150)
+    def set_images(self):
+        for _, image in images[:-1]:
+            image_canvas = Canvas(self.images_frame, height=IMAGE_HIEGHT_SMALL, width=IMAGE_WIDTH_SMALL)
+            image_canvas.pack(side='left', padx=5, pady=5)
+            image = Image.open(image).resize((IMAGE_WIDTH_SMALL, IMAGE_HIEGHT_SMALL))
+            img = ImageTk.PhotoImage(image)
+            image_canvas.create_image(0, 0, image=img, anchor='nw', tag="image")
+            image_canvas.image = img
 
-    def create_entries(self, text,text2=""):
+    def set_labels(self):
+        for label, _ in images[:-1]:
+            font = "Times 10 roman normal"
+            Label(self.labels_frame, text=label, font=font, width=30, bg=BACKGROUND1, fg='white') \
+                .pack(side='left', pady=10)
+
+    def create_entries(self, text, text2=""):
         frame = Frame(self.input_frame)  # bg=BACKGROUND3
         frame.pack(padx=5, pady=5)
 
@@ -100,9 +112,9 @@ class Gui:
             self.message_error(MESSAGE[0])
         else:
             error_message = ""
-            c = int(cuisine)
-            p = int(price)
-            l = int(location)
+            c = float(cuisine)
+            p = float(price)
+            l = float(location)
 
             error_message += self.check_valid(c, self.cuisine_range, 'Cuisine')
             error_message += self.check_valid(p, self.price_range, "Price")
@@ -113,9 +125,10 @@ class Gui:
                 self.output_value.set("")
                 self.output_image.delete("image")
             else:
-                # todo: call fuzzy output function
-                self.output_value.set(6)
-                image = "ondemand_video.png"
+
+                output = round(self.restaurant_recommendation.set_inputs(c, p, l), 3)
+                self.output_value.set(f"the recommendation degree: {output}")
+                image = "recommendation_output.png"
                 self.set_image(image)
 
     def check_valid(self, value, range, name):
