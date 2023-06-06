@@ -1,9 +1,9 @@
 images = [
-    ('Price', 'price.png'),
-    ('Cuisine', 'cuisine.png'),
-    ('Location', 'location.png'),
-    ('Recommendation', 'recommendation.png'),
-    ('Recommendation Output', 'recommendation_output.png')
+    ('Price', 'images/price.png'),
+    ('Cuisine', 'images/cuisine.png'),
+    ('Location', 'images/location.png'),
+    ('Recommendation', 'images/recommendation.png'),
+    ('Recommendation Output', 'images/recommendation_output.png')
 ]
 
 

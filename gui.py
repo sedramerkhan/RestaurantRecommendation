@@ -16,7 +16,8 @@ class Gui:
         screen_height = self.root.winfo_screenheight()
         print(screen_height, screen_width)
         # x, y = 1366, 768
-        self.root.geometry('%dx%d+%d+%d' % (screen_width * .65, screen_height * .75, screen_width / 5, screen_height / 7))
+        self.root.geometry('%dx%d+%d+%d' % (screen_width * .65,
+                           screen_height * .75, screen_width / 5, screen_height / 7))
         self.root.config(bg=BACKGROUND1)
 
     def __init__(self):
@@ -39,7 +40,7 @@ class Gui:
         self.set_labels()
 
         self.input_frame = Frame(self.root, bg=BACKGROUND1)
-        self.input_frame.pack(side='left', padx=5, pady=5, expand=1)#fill='y',
+        self.input_frame.pack(side='left', padx=5, pady=5, expand=1)  # fill='y',
 
         self.cuisine = self.create_entries('Cuisine')
         self.price = self.create_entries('Price', "K SP")
@@ -53,12 +54,13 @@ class Gui:
         self.output_image.pack(padx=5, pady=5)
 
         font = "Times 15 roman normal"
-        self.output_label = Label(self.output_frame,font=font, textvariable=self.output_value, width=28) \
+        self.output_label = Label(self.output_frame, font=font, textvariable=self.output_value, width=28) \
             .pack(pady=5)
 
     def set_images(self):
         for _, image in images[:-1]:
-            image_canvas = Canvas(self.images_frame, height=IMAGE_HIEGHT_SMALL, width=IMAGE_WIDTH_SMALL)
+            image_canvas = Canvas(
+                self.images_frame, height=IMAGE_HIEGHT_SMALL, width=IMAGE_WIDTH_SMALL)
             image_canvas.pack(side='left', padx=5, pady=5)
             image = Image.open(image).resize((IMAGE_WIDTH_SMALL, IMAGE_HIEGHT_SMALL))
             img = ImageTk.PhotoImage(image)
@@ -128,7 +130,7 @@ class Gui:
 
                 output = round(self.restaurant_recommendation.set_inputs(c, p, l), 3)
                 self.output_value.set(f"the recommendation degree: {output}")
-                image = "recommendation_output.png"
+                image = images[4][1]
                 self.set_image(image)
 
     def check_valid(self, value, range, name):

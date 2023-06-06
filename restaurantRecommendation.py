@@ -152,8 +152,8 @@ class RestaurantRecommendation:
         ])
 
     def set_inputs(self, c, p, l):
-        self.recommender.input['price'] = p
         self.recommender.input['cuisine'] = c
+        self.recommender.input['price'] = p
         self.recommender.input['location'] = l
 
         self.recommender.compute()
