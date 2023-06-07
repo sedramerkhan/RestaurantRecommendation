@@ -20,7 +20,11 @@ IMAGE_HIEGHT_SMALL = 150
 IMAGE_WIDTH_SMALL = 200
 
 MESSAGE = [
-    "You Have To Enter Only Integers.",
+    "You Have To Enter Only Numbers.",
     "You Have To Enter Numbers For All Input Fields.",
-    "You Have To Enter Only Integers Between {} and {} in {}",
+    "You Have To Enter Only Numbers Between {} and {} in {}",
+    'You Have To Select a Cuisine.',
 ]
+
+FONTBIG = "Times 15 roman normal"
+FONTSMALL = "Times 12 roman normal"
