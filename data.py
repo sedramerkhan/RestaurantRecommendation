@@ -47,6 +47,6 @@ CUISINE = {
     'Paraguay': 3.96,
     'Pakistan': 3.96,
     'Tunisia': 3.95,
-    'Uruguay Slovakia': 3.95,
+    'Uruguay': 3.95,
     'Slovakia': 3.94
 }
