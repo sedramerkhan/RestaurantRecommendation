@@ -1,9 +1,11 @@
 from tkinter import *
+from tkinter.ttk import Combobox
 
 from PIL import ImageTk, Image
 
 from data import *
 from restaurantRecommendation import RestaurantRecommendation
+from gmap import GMap
 from utils import *
 
 
@@ -48,22 +50,34 @@ class Gui:
         self.set_labels()
 
         self.input_frame = Frame(self.root, bg=BACKGROUND1)
-        self.input_frame.pack(side='left', padx=5, pady=5, expand=1)  # fill='y',
 
-        self.cuisine, self.selected_cuisine = self.create_option_menu('Cuisine', CUISINE.keys())
+        self.cuisine, self.selected_cuisine = self.create_option_menu(
+            'Cuisine', list(CUISINE.keys()))
 
+        self.cuisine_value = self.create_entries('Cuisine Value')
         self.price = self.create_entries('Price', "K SP")
         self.location = self.create_entries('Location', "KM")
         self.button = self.create_button()
 
+        def handle_selection(event):
+            selection = event.widget.get()
+            varname = self.cuisine_value.cget("textvariable")
+            self.cuisine_value.setvar(varname, CUISINE[selection])
+
+        self.cuisine.bind("<<ComboboxSelected>>", handle_selection)
+
         self.output_frame = Frame(self.root, bg=BACKGROUND1)
-        self.output_frame.pack(side='left', padx=5, pady=5, expand=1)
-
-        self.output_image = Canvas(self.output_frame, height=self.image_height, width=self.image_width)
-        self.output_image.pack(padx=5, pady=5)
-
+        self.output_image = Canvas(
+            self.output_frame, height=self.image_height, width=self.image_width)
         self.output_label = Label(self.output_frame, font=FONTBIG, textvariable=self.output_value, width=28) \
             .pack(pady=5)
+
+        self.map = GMap(self)
+
+        self.map.get_widget().pack(side='left', padx=5, pady=5, expand=1)
+        self.input_frame.pack(side='left', padx=5, pady=5, expand=1)
+        self.output_frame.pack(padx=5, pady=5, expand=1)
+        self.output_image.pack(padx=5, pady=5)
 
     def set_images(self):
         for _, image in images[:-1]:
@@ -86,10 +100,11 @@ class Gui:
         frame = Frame(self.input_frame)  # bg=BACKGROUND3
         frame.pack(padx=5, pady=5)
 
-        Label(frame, text=text, font=FONTBIG, width=6) \
+        Label(frame, text=text, font=FONTBIG, width=10) \
             .pack(side='left', padx=5, pady=5)
 
-        entry = Entry(frame, font=FONTBIG, width=10)
+        var = StringVar()
+        entry = Entry(frame, font=FONTBIG, width=10, textvariable=var)
         entry.pack(side='left', padx=5, pady=5)
 
         Label(frame, text=text2, font=FONTSMALL, width=3) \
@@ -97,16 +112,17 @@ class Gui:
         return entry
 
     def create_option_menu(self, text, data):
+
         frame = Frame(self.input_frame)  # bg=BACKGROUND3
         frame.pack(padx=5, pady=5)
-        Label(frame, text=text, font=FONTBIG, width=6) \
+        Label(frame, text=text, font=FONTBIG, width=10) \
             .pack(side='left', padx=5, pady=5)
 
         selected = StringVar()
-        selected.set("select")
+        selected.set(data[0])
 
-        menu = OptionMenu(frame, selected, *data)
-        menu.config(width=18)
+        menu = Combobox(frame, textvariable=selected, state='readonly', values=data)
+        menu.config(width=20)
         menu.pack(side='left', padx=5, pady=5)
         return menu, selected
 
@@ -128,7 +144,8 @@ class Gui:
         price = self.price.get()
         location = self.location.get()
 
-        is_num = lambda value: not value.replace('.', '', 1).isdigit()
+        def is_num(value):
+            return not value.replace('.', '', 1).isdigit()
 
         if price == "" or location == "":
             self.message_error(MESSAGE[1])
@@ -142,8 +159,9 @@ class Gui:
             p = float(price)
             l = float(location)
 
-            check_valid = lambda value, range, name: MESSAGE[2].format(range[0], range[1], name)+"\n" \
-                if value < range[0] or value > range[1] else ""
+            def check_valid(value, range, name):
+                return MESSAGE[2].format(range[0], range[1], name)+"\n" \
+                    if value < range[0] or value > range[1] else ""
 
             error_message += check_valid(p, self.price_range, "Price")
             error_message += check_valid(l, self.location_range, "Location")
@@ -175,8 +193,6 @@ class Gui:
 
 def main():
     Gui().root.mainloop()
-    # print("quit")
-    # root.quit()
 
 
 if __name__ == '__main__':
