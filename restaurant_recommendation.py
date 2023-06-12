@@ -15,21 +15,22 @@ class RestaurantRecommendation:
         self.price = ctrl.Antecedent(
             np.arange(self.price_range[0], self.price_range[1]+1, 1), 'price')
 
-        self.price['cheap'] = fuzz.trimf(self.price.universe, [10, 10, 30])
-        self.price['affordable'] = fuzz.trapmf(self.price.universe, [25, 35, 45, 55])
-        self.price['expensive'] = fuzz.trapmf(self.price.universe, [40, 60, 70, 90])
-        self.price['very_expensive'] = fuzz.trapmf(self.price.universe, [80, 120, 150, 150])
+        self.price['cheap'] = fuzz.trapmf(self.price.universe, [10, 10, 30,40])
+        self.price['affordable'] = fuzz.trimf(self.price.universe, [20, 40, 60])
+        self.price['expensive'] = fuzz.trimf(self.price.universe, [40, 60, 80])
+        self.price['very_expensive'] = fuzz.trapmf(self.price.universe, [60, 100, 150, 150])
 
         fig, _ = FuzzyVariableVisualizer(self.price).view()
         plt.savefig(images_paths['price'])
 
-        self.cuisine_range = (0, 10)
+        self.cuisine_range = (0, 5)
+        step = .01
         self.cuisine = ctrl.Antecedent(
-            np.arange(self.cuisine_range[0], self.cuisine_range[1]+.5, 0.5), 'cuisine')
+            np.arange(self.cuisine_range[0], self.cuisine_range[1]+step, step), 'cuisine')
 
-        self.cuisine['bad'] = fuzz.trimf(self.cuisine.universe, [0, 0, 4])
-        self.cuisine['acceptable'] = fuzz.trapmf(self.cuisine.universe, [3, 4.5, 5.5, 7])
-        self.cuisine['good'] = fuzz.trimf(self.cuisine.universe, [6, 10, 10])
+        self.cuisine['bad'] = fuzz.trimf(self.cuisine.universe, [self.cuisine_range[0], self.cuisine_range[0],3])
+        self.cuisine['acceptable'] = fuzz.trimf(self.cuisine.universe, [2.5, 3.25, 4])
+        self.cuisine['good'] = fuzz.trimf(self.cuisine.universe, [3.7, 5, 5])
         fig, _ = FuzzyVariableVisualizer(self.cuisine).view()
         plt.savefig(images_paths['cuisine'])
 
@@ -37,9 +38,9 @@ class RestaurantRecommendation:
         self.location = ctrl.Antecedent(
             np.arange(self.location_range[0], self.location_range[1]+.5, 0.5), 'location')
 
-        self.location['close'] = fuzz.trimf(self.location.universe, [0, 0, 5])
-        self.location['normal'] = fuzz.trapmf(self.location.universe, [4, 6.5, 7.5, 10])
-        self.location['far'] = fuzz.trapmf(self.location.universe, [8, 11, 13, 15])
+        self.location['close'] = fuzz.trapmf(self.location.universe, [0, 0,3, 5])
+        self.location['normal'] = fuzz.trimf(self.location.universe, [2, 6, 10])
+        self.location['far'] = fuzz.trimf(self.location.universe, [6, 11, 15])
         self.location['very_far'] = fuzz.trimf(self.location.universe, [14, 20, 20])
         fig, _ = FuzzyVariableVisualizer(self.location).view()
         plt.savefig(images_paths['location'])

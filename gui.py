@@ -74,11 +74,11 @@ class Gui:
         self.output_label = Label(self.output_frame, font=FONTBIG, textvariable=self.output_value, width=28) \
             .pack(pady=5)
 
-        self.map = GMap(self, cuisines, restaurants)
+        self.map = GMap(self, cuisines, restaurants, self.height, self.width)
 
         self.map.get_widget().pack(side='left', padx=5, pady=5, expand=1)
         self.input_frame.pack(side='left', padx=5, pady=5, expand=1)
-        self.output_frame.pack(padx=5, pady=5, expand=1)
+        self.output_frame.pack(padx=10, pady=5, expand=1)
         self.output_image.pack(padx=5, pady=5)
 
     def set_images(self):
@@ -122,7 +122,7 @@ class Gui:
             .pack(side='left', padx=5, pady=5)
 
         selected = StringVar()
-        selected.set(data[0])
+        selected.set('Select')
 
         menu = Combobox(frame, textvariable=selected, state='readonly', values=data)
         menu.config(width=20)
@@ -162,7 +162,7 @@ class Gui:
             l = float(location)
 
             def check_valid(value, range, name):
-                return MESSAGE[2].format(range[0], range[1], name)+"\n" \
+                return MESSAGE[2].format(range[0], range[1], name) + "\n" \
                     if value < range[0] or value > range[1] else ""
 
             error_message += check_valid(p, self.price_range, "Price")
