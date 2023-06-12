@@ -3,10 +3,8 @@ from tkinter.ttk import Combobox
 
 from PIL import ImageTk, Image
 
-from data import *
-from restaurantRecommendation import RestaurantRecommendation
 from gmap import GMap
-from utils import *
+from gui_config import *
 
 
 class Gui:
@@ -24,7 +22,7 @@ class Gui:
 
         return screen_width, screen_height
 
-    def __init__(self):
+    def __init__(self, restaurant_recommendation, cuisines, restaurants, images_paths):
         self.width, self.height = self.root_config()
 
         self.image_height = int(self.height / 3)
@@ -41,7 +39,10 @@ class Gui:
         self.labels_frame = Frame(self.root, bg=BACKGROUND1)
         self.labels_frame.pack(fill='x', padx=10)
 
-        self.restaurant_recommendation = RestaurantRecommendation()
+        self.restaurant_recommendation = restaurant_recommendation
+        self.cuisines = cuisines
+        self.restaurants = restaurants
+        self.images_paths = images_paths
 
         self.cuisine_range = self.restaurant_recommendation.cuisine_range
         self.location_range = self.restaurant_recommendation.location_range
@@ -52,7 +53,8 @@ class Gui:
         self.input_frame = Frame(self.root, bg=BACKGROUND1)
 
         self.cuisine, self.selected_cuisine = self.create_option_menu(
-            'Cuisine', list(CUISINE.keys()))
+            'Cuisine', list(self.cuisines.keys())
+        )
 
         self.cuisine_value = self.create_entries('Cuisine Value')
         self.price = self.create_entries('Price', "K SP")
@@ -62,7 +64,7 @@ class Gui:
         def handle_selection(event):
             selection = event.widget.get()
             varname = self.cuisine_value.cget("textvariable")
-            self.cuisine_value.setvar(varname, CUISINE[selection])
+            self.cuisine_value.setvar(varname, self.cuisines[selection])
 
         self.cuisine.bind("<<ComboboxSelected>>", handle_selection)
 
@@ -72,7 +74,7 @@ class Gui:
         self.output_label = Label(self.output_frame, font=FONTBIG, textvariable=self.output_value, width=28) \
             .pack(pady=5)
 
-        self.map = GMap(self)
+        self.map = GMap(self, cuisines, restaurants)
 
         self.map.get_widget().pack(side='left', padx=5, pady=5, expand=1)
         self.input_frame.pack(side='left', padx=5, pady=5, expand=1)
@@ -80,19 +82,20 @@ class Gui:
         self.output_image.pack(padx=5, pady=5)
 
     def set_images(self):
-        for _, image in images[:-1]:
+        for _, image_path in list(self.images_paths.items())[:-1]:
             image_canvas = Canvas(
                 self.images_frame, height=self.image_height_small, width=self.image_width_small)
             image_canvas.pack(side='left', padx=15, pady=5)
-            image = Image.open(image).resize((self.image_width_small, self.image_height_small))
-            img = ImageTk.PhotoImage(image)
+            image_path = Image.open(image_path).resize(
+                (self.image_width_small, self.image_height_small))
+            img = ImageTk.PhotoImage(image_path)
             image_canvas.create_image(0, 0, image=img, anchor='nw', tag="image")
             image_canvas.image = img
 
     def set_labels(self):
-        for label, _ in images[:-1]:
+        for key, _ in list(self.images_paths.items())[:-1]:
             font = "Times 10 roman normal"
-            Label(self.labels_frame, text=label, font=font, width=int(self.image_width_small / 6), bg=BACKGROUND1,
+            Label(self.labels_frame, text=key, font=font, width=int(self.image_width_small / 6), bg=BACKGROUND1,
                   fg='white') \
                 .pack(side='left', pady=10)
 
@@ -140,22 +143,21 @@ class Gui:
         self.output_image.image = img
 
     def get_inputs(self):
-        cuisine = self.selected_cuisine.get()
+        cuisine_value = self.cuisine_value.get()
         price = self.price.get()
         location = self.location.get()
 
-        def is_num(value):
+        def is_not_num(value):
             return not value.replace('.', '', 1).isdigit()
 
-        if price == "" or location == "":
+        if price == "" or location == "" or cuisine_value == "":
             self.message_error(MESSAGE[1])
-        elif is_num(location) or is_num(price):
+        elif is_not_num(location) or is_not_num(price) or is_not_num(cuisine_value):
             self.message_error(MESSAGE[0])
-        elif cuisine == 'select':
-            self.message_error(MESSAGE[3])
+
         else:
             error_message = ""
-            c = CUISINE[cuisine]
+            c = float(cuisine_value)
             p = float(price)
             l = float(location)
 
@@ -165,16 +167,16 @@ class Gui:
 
             error_message += check_valid(p, self.price_range, "Price")
             error_message += check_valid(l, self.location_range, "Location")
+            error_message += check_valid(c, self.cuisine_range, "Cuisine Value")
 
             if error_message != "":
                 self.message_error(error_message)
                 self.output_value.set("")
                 self.output_image.delete("image")
             else:
-
                 output = round(self.restaurant_recommendation.set_inputs(c, p, l), 3)
                 self.output_value.set(f"the recommendation degree: {output}")
-                image = images[4][1]
+                image = self.images_paths['recommendation output']
                 self.set_image(image)
 
     def message_error(self, text):
@@ -189,11 +191,3 @@ class Gui:
         self.selected_cuisine.set('select')
         self.price.delete(0, 'end')
         self.location.delete(0, 'end')
-
-
-def main():
-    Gui().root.mainloop()
-
-
-if __name__ == '__main__':
-    main()
