@@ -1,12 +1,13 @@
 import tkinter
 import tkintermapview
 import pandas as pd
-from data import CUISINE
 
 
 class GMap():
-    def __init__(self, master_gui, my_position=(33.4928347, 36.315426)):
+    def __init__(self, master_gui, cuisines, restaurants, my_position=(33.4928347, 36.315426)):
         self.master_gui = master_gui
+        self.cuisines = cuisines
+        self.restaurants = restaurants
         self.my_position = my_position
 
         self.map_widget = tkintermapview.TkinterMapView(
@@ -21,7 +22,7 @@ class GMap():
         self.map_widget.set_zoom(14)
         self.add_marker(my_position, 'my location')
 
-        self.restaurants = self.load_restaurants('csv_files/restaurants.csv')
+        self.restaurants = restaurants
         for restaurant in self.restaurants:
             self.add_marker((restaurant['lat'], restaurant['lon']), restaurant['name'])
 
@@ -46,7 +47,7 @@ class GMap():
             self.set_gui_field_val('location', round(distance, 1))
             self.set_gui_field_val('price', min_res['price'])
             self.set_gui_field_val('cuisine', min_res['cuisine'])
-            self.set_gui_field_val('cuisine_value', CUISINE[min_res['cuisine']])
+            self.set_gui_field_val('cuisine_value', self.cuisines[min_res['cuisine']])
 
         self.map_widget.add_left_click_map_command(left_click_event)
 
@@ -71,13 +72,3 @@ class GMap():
 
     def get_widget(self):
         return self.map_widget
-
-
-# def add_marker_event(coords):
-#     self.map_widget.set_marker(coords[0], coords[1], text='')
-
-# self.map_widget.add_right_click_menu_command(label="Add Marker",
-#                                                  command=add_marker_event,
-#                                                  pass_coords=True)
-
-# map_widget.delete_all_marker()

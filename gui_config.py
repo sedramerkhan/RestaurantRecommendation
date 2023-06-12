@@ -1,12 +1,3 @@
-images = [
-    ('Price', 'images/price.png'),
-    ('Cuisine', 'images/cuisine.png'),
-    ('Location', 'images/location.png'),
-    ('Recommendation', 'images/recommendation.png'),
-    ('Recommendation Output', 'images/recommendation_output.png')
-]
-
-
 BACKGROUND1 = "#5d3891"
 BACKGROUND3 = "#E0AA3E"
 BACKGROUND2 = "lightgrey"
