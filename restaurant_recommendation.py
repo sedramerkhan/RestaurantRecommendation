@@ -148,3 +148,6 @@ class RestaurantRecommendation:
         plt.savefig(self.images_paths['recommendation output'])
 
         return self.recommender.output['recommendation']
+
+
+# cuisine: 5.0, price: 150.0 location: 10.0
