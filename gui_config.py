@@ -1,6 +1,6 @@
-BACKGROUND1 = "#5d3891"
-BACKGROUND3 = "#E0AA3E"
-BACKGROUND2 = "lightgrey"
+PURPLE = "#5d3891"
+GOLD = "#E0AA3E"
+LIGHT_GRAY = "lightgrey"
 BUTTON = "midnightblue"
 
 IMAGE_HIEGHT = 250

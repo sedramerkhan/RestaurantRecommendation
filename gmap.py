@@ -4,14 +4,14 @@ import pandas as pd
 
 
 class GMap():
-    def __init__(self, master_gui, cuisines, restaurants, my_position=(33.4928347, 36.315426)):
+    def __init__(self, master_gui, cuisines, restaurants, height,width,my_position=(33.4928347, 36.315426)):
         self.master_gui = master_gui
         self.cuisines = cuisines
         self.restaurants = restaurants
         self.my_position = my_position
 
         self.map_widget = tkintermapview.TkinterMapView(
-            master_gui.root, width=800, height=600, corner_radius=0,
+            master_gui.root, width=width/3, height=height/2, corner_radius=0,
             use_database_only=True, database_path="damascus.db"
         )
 

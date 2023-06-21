@@ -18,7 +18,7 @@ class Gui:
         print(screen_height, screen_width)
         # x, y = 1366, 768
         self.root.geometry('%dx%d+%d+%d' % (screen_width, screen_height, 0, 0))
-        self.root.config(bg=BACKGROUND1)
+        self.root.config(bg=PURPLE)
 
         return screen_width, screen_height
 
@@ -34,9 +34,9 @@ class Gui:
         self.output_value = StringVar()
         # self.output_value()
 
-        self.images_frame = Frame(self.root, bg=BACKGROUND1)
+        self.images_frame = Frame(self.root, bg=PURPLE)
         self.images_frame.pack(fill='x', padx=10)
-        self.labels_frame = Frame(self.root, bg=BACKGROUND1)
+        self.labels_frame = Frame(self.root, bg=PURPLE)
         self.labels_frame.pack(fill='x', padx=10)
 
         self.restaurant_recommendation = restaurant_recommendation
@@ -50,35 +50,40 @@ class Gui:
         self.set_images()
         self.set_labels()
 
-        self.input_frame = Frame(self.root, bg=BACKGROUND1)
+        self.input_frame = Frame(self.root, bg=PURPLE)
 
-        self.cuisine, self.selected_cuisine = self.create_option_menu(
-            'Cuisine', list(self.cuisines.keys())
-        )
+        self.cuisine_list = self.create_option_menu('Cuisine', list(self.cuisines.keys()))
 
-        self.cuisine_value = self.create_entries('Cuisine Value')
+        self.cuisine = self.create_entries('Cuisine Value')
         self.price = self.create_entries('Price', "K SP")
         self.location = self.create_entries('Location', "KM")
         self.button = self.create_button()
 
-        def handle_selection(event):
-            selection = event.widget.get()
-            varname = self.cuisine_value.cget("textvariable")
-            self.cuisine_value.setvar(varname, self.cuisines[selection])
+        def onSelect(evt):
+            w = evt.widget
+            selections = w.curselection()
+            varname = self.cuisine.cget("textvariable")
+            if selections:
+                values = list(map(lambda x: self.cuisines[w.get(x)], selections))
+                avg = sum(values) / len(selections)
+                self.cuisine.setvar(varname, round(avg, 3))
+                print("the value is:", w.curselection(), values, avg)
+            else:
+                self.cuisine.setvar(varname, "")
 
-        self.cuisine.bind("<<ComboboxSelected>>", handle_selection)
+        self.cuisine_list.bind("<<ListboxSelect>>", onSelect)
 
-        self.output_frame = Frame(self.root, bg=BACKGROUND1)
+        self.output_frame = Frame(self.root, bg=PURPLE)
         self.output_image = Canvas(
             self.output_frame, height=self.image_height, width=self.image_width)
         self.output_label = Label(self.output_frame, font=FONTBIG, textvariable=self.output_value, width=28) \
             .pack(pady=5)
 
-        self.map = GMap(self, cuisines, restaurants)
+        self.map = GMap(self, cuisines, restaurants, self.height, self.width)
 
         self.map.get_widget().pack(side='left', padx=5, pady=5, expand=1)
         self.input_frame.pack(side='left', padx=5, pady=5, expand=1)
-        self.output_frame.pack(padx=5, pady=5, expand=1)
+        self.output_frame.pack(padx=10, pady=5, expand=1)
         self.output_image.pack(padx=5, pady=5)
 
     def set_images(self):
@@ -95,7 +100,7 @@ class Gui:
     def set_labels(self):
         for key, _ in list(self.images_paths.items())[:-1]:
             font = "Times 10 roman normal"
-            Label(self.labels_frame, text=key, font=font, width=int(self.image_width_small / 6), bg=BACKGROUND1,
+            Label(self.labels_frame, text=key, font=font, width=int(self.image_width_small / 6), bg=PURPLE,
                   fg='white') \
                 .pack(side='left', pady=10)
 
@@ -121,18 +126,23 @@ class Gui:
         Label(frame, text=text, font=FONTBIG, width=10) \
             .pack(side='left', padx=5, pady=5)
 
-        selected = StringVar()
-        selected.set(data[0])
+        scrollbar = Scrollbar(frame)
+        scrollbar.pack(side=RIGHT, fill=Y)
 
-        menu = Combobox(frame, textvariable=selected, state='readonly', values=data)
-        menu.config(width=20)
-        menu.pack(side='left', padx=5, pady=5)
-        return menu, selected
+        cuisines_list = Listbox(frame, selectmode="multiple", yscrollcommand=scrollbar.set)
+        cuisines_list.pack(padx=10, pady=10, expand=YES, fill="both")
+
+        for each_item in range(len(data)):
+            cuisines_list.insert(END, data[each_item])
+            cuisines_list.itemconfig(each_item, bg="#DDDDDD" if each_item % 2 == 0 else "#CDCDCD")
+        scrollbar.config(command=cuisines_list.yview)
+
+        return cuisines_list
 
     def create_button(self):
-        frame = Frame(self.input_frame, bg=BACKGROUND1)  #
+        frame = Frame(self.input_frame, bg=PURPLE)  #
         frame.pack(padx=10, pady=10)
-        return Button(frame, text="get recommendation", font=FONTBIG, width=15, bg=BACKGROUND3, command=self.get_inputs) \
+        return Button(frame, text="get recommendation", font=FONTBIG, width=15, bg=GOLD, command=self.get_inputs) \
             .pack(side='left', padx=10, pady=0)
 
     def set_image(self, image):
@@ -143,7 +153,7 @@ class Gui:
         self.output_image.image = img
 
     def get_inputs(self):
-        cuisine_value = self.cuisine_value.get()
+        cuisine_value = self.cuisine.get()
         price = self.price.get()
         location = self.location.get()
         print(f"{cuisine_value=},{price=},{location=}")
@@ -162,7 +172,7 @@ class Gui:
             l = float(location)
 
             def check_valid(value, range, name):
-                return MESSAGE[2].format(range[0], range[1], name)+"\n" \
+                return MESSAGE[2].format(range[0], range[1], name) + "\n" \
                     if value < range[0] or value > range[1] else ""
 
             error_message += check_valid(p, self.price_range, "Price")
@@ -174,6 +184,7 @@ class Gui:
                 self.output_value.set("")
                 self.output_image.delete("image")
             else:
+                print(f"cuisine: {c}, price: {p} location: {l}")
                 output = round(self.restaurant_recommendation.set_inputs(c, p, l), 3)
                 self.output_value.set(f"the recommendation degree: {output}")
                 image = self.images_paths['recommendation output']
@@ -181,13 +192,12 @@ class Gui:
 
     def message_error(self, text):
         warn_label = Label(self.input_frame, font=("Purisa", 10),
-                           width=25, bg=BACKGROUND1, fg='white',
+                           width=25, bg=PURPLE, fg='white',
                            wraplength=200, text=text)
         warn_label.pack()
         self.input_frame.after(5000, lambda: warn_label.destroy())
         # self.clear_entries()
 
     def clear_entries(self):
-        self.selected_cuisine.set('select')
         self.price.delete(0, 'end')
         self.location.delete(0, 'end')
