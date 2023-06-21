@@ -146,7 +146,7 @@ class Gui:
         cuisine_value = self.cuisine_value.get()
         price = self.price.get()
         location = self.location.get()
-
+        print(f"{cuisine_value=},{price=},{location=}")
         def is_not_num(value):
             return not value.replace('.', '', 1).isdigit()
 
