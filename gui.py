@@ -62,6 +62,7 @@ class Gui:
             w = evt.widget
             selections = w.curselection()
             varname = self.cuisine.cget("textvariable")
+            print("hello world")
             if selections:
                 values = list(map(lambda x: self.cuisines[w.get(x)], selections))
                 avg = sum(values) / len(selections)
@@ -128,7 +129,7 @@ class Gui:
         scrollbar = Scrollbar(frame)
         scrollbar.pack(side=RIGHT, fill=Y)
 
-        cuisines_list = Listbox(frame, selectmode="multiple", yscrollcommand=scrollbar.set)
+        cuisines_list = Listbox(frame, selectmode="multiple", yscrollcommand=scrollbar.set,exportselection=False)
         cuisines_list.pack(padx=10, pady=10, expand=YES, fill="both")
 
         for each_item in range(len(data)):
