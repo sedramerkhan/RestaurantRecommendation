@@ -8,6 +8,7 @@ def load_data(path):
     return pd.read_csv(path).to_dict(orient='records')
 
 
+
 def main():
     cuisines = load_data(files_paths['cuisines'])
     cuisines = {cuisine['country']: cuisine['score'] for cuisine in cuisines}

@@ -185,7 +185,6 @@ class Gui:
                 self.output_value.set("")
                 self.output_image.delete("image")
             else:
-                print(f"cuisine: {c}, price: {p} location: {l}")
                 output = round(self.restaurant_recommendation.set_inputs(c, p, l), 3)
                 self.output_value.set(f"the recommendation degree: {output}")
                 image = self.images_paths['recommendation output']

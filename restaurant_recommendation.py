@@ -114,13 +114,23 @@ class RestaurantRecommendation:
         self.recommender.input['cuisine'] = c
         self.recommender.input['price'] = p
         self.recommender.input['location'] = l
-
+        print(f"{self.get_variable_key(self.price,p)} price, {self.get_variable_key(self.cuisine,c)} cuisine, {self.get_variable_key(self.location,l)} destination")
         self.recommender.compute()
         fig, _ = FuzzyVariableVisualizer(
             self.recommendation).view(sim=self.recommender)
         plt.savefig(self.images_paths['recommendation output'])
 
         return self.recommender.output['recommendation']
+    def get_variable_key(self,variable, user_input):
+        max_membership = 0
+        key_with_max_membership = None
 
+        for key in variable.terms.keys():
+            membership = fuzz.interp_membership(variable.universe, variable[key].mf, user_input)
+            if membership > max_membership:
+                max_membership = membership
+                key_with_max_membership = key
+
+        return key_with_max_membership
 
 # cuisine: 5.0, price: 150.0 location: 10.0
