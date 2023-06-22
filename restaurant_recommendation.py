@@ -1,4 +1,3 @@
-import warnings
 from skfuzzy import control as ctrl
 import skfuzzy as fuzz
 import numpy as np

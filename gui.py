@@ -1,5 +1,4 @@
-from tkinter import *
-from tkinter.ttk import Combobox
+from tkinter import Tk, StringVar, Frame, Label, Canvas, Button, Scrollbar, Listbox, RIGHT, Y, END, Entry, YES
 
 from PIL import ImageTk, Image
 
@@ -129,7 +128,8 @@ class Gui:
         scrollbar = Scrollbar(frame)
         scrollbar.pack(side=RIGHT, fill=Y)
 
-        cuisines_list = Listbox(frame, selectmode="multiple", yscrollcommand=scrollbar.set,exportselection=False)
+        cuisines_list = Listbox(frame, selectmode="multiple",
+                                yscrollcommand=scrollbar.set, exportselection=False)
         cuisines_list.pack(padx=10, pady=10, expand=YES, fill="both")
 
         for each_item in range(len(data)):
@@ -158,6 +158,7 @@ class Gui:
         price = self.price.get()
         location = self.location.get()
         print(f"{cuisine_value=},{price=},{location=}")
+
         def is_not_num(value):
             return not value.replace('.', '', 1).isdigit()
 

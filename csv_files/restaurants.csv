@@ -1,12 +1,12 @@
-name,price,cuisine,lat,lon,distance from ITE
-Alaa,10,Spain,33.4984526,36.3018376,1.4
-Dream Bite,130,Canada,33.491739,36.2983811,1.6
-Al-Hamra,30,Poland,33.5205381,36.2880777,4
-Al-Zien Chicken,70,Croatia,33.4987395,36.2677786,4.5
-Kamal Aiash,140,Switzerland,33.5073624,36.2525956,6
-Dajajati,90,Belgium,33.5485678,36.3133835,6.2
-Habak,10,Australia,33.5278635,36.2175528,9.9
-Mandy Al-Trik,110,Slovakia,33.568423,36.3877565,10.8
-Omaya Class,120,Saudi Arabia,33.5380789,36.1974706,12
-Al-Abbass Chicken,150,Morocco,33.5876405,36.185889,16
-Equestrian Club,30,Norway,33.5643153,36.1579528,16.6
+name,price,cuisine,lat,lon
+Alaa,10,Spain,33.4984526,36.3018376
+Dream Bite,130,Canada,33.491739,36.2983811
+Al-Hamra,30,Poland,33.5205381,36.2880777
+Al-Zien Chicken,70,Croatia,33.4987395,36.2677786
+Kamal Aiash,140,Switzerland,33.5073624,36.2525956
+Dajajati,90,Belgium,33.5485678,36.3133835
+Habak,10,Australia,33.5278635,36.2175528
+Mandy Al-Trik,110,Slovakia,33.568423,36.3877565
+Omaya Class,120,Saudi Arabia,33.5380789,36.1974706
+Al-Abbass Chicken,150,Morocco,33.5876405,36.185889
+Equestrian Club,30,Norway,33.5643153,36.1579528
