@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class GMap():
-    def __init__(self, master_gui, cuisines, restaurants, height,width,my_position=(33.4928347, 36.315426)):
+    def __init__(self, master_gui, cuisines, restaurants, height, width, my_position=(33.4928347, 36.315426)):
         self.master_gui = master_gui
         self.cuisines = cuisines
         self.restaurants = restaurants
@@ -39,15 +39,15 @@ class GMap():
                 )
             )
 
-            if self.cal_distance(coordinates, (min_res['lat'], min_res['lon'])) > 0.3:
+            if self.cal_distance(coordinates, (min_res['lat'], min_res['lon'])) > 0.4:
                 return
 
             distance = self.cal_distance(self.my_position, (min_res['lat'], min_res['lon']))
 
             self.set_gui_field_val('location', round(distance, 1))
             self.set_gui_field_val('price', min_res['price'])
-            self.set_gui_field_val('cuisine', min_res['cuisine'])
-            self.set_gui_field_val('cuisine_value', self.cuisines[min_res['cuisine']])
+            self.set_gui_list_val('cuisine_list', min_res['cuisine'])
+            self.set_gui_field_val('cuisine', self.cuisines[min_res['cuisine']])
 
         self.map_widget.add_left_click_map_command(left_click_event)
 
@@ -55,6 +55,13 @@ class GMap():
         gui_field = self.master_gui.__dict__[field]
         varname = gui_field.cget("textvariable")
         gui_field.setvar(varname, value)
+
+    def set_gui_list_val(self, list, value):
+        gui_list = self.master_gui.__dict__[list]
+        gui_list.selection_clear(0, 'end')
+        values = gui_list.get(0, 'end')
+        index = values.index(value)
+        gui_list.select_set(index)
 
     def add_marker(self, position, text):
         self.map_widget.set_marker(*position, text=text)
