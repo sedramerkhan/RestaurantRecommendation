@@ -71,7 +71,7 @@ class Gui:
             else:
                 self.cuisine.setvar(varname, "")
 
-        # self.cuisine_list.bind("<<ListboxSelect>>", onSelect)
+        self.cuisine_list.bind("<<ListboxSelect>>", onSelect)
 
         self.output_frame = Frame(self.root, bg=PURPLE)
         self.output_image = Canvas(
