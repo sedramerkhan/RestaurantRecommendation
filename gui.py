@@ -53,7 +53,6 @@ class Gui:
         self.input_frame = Frame(self.root, bg=PURPLE)
 
         self.cuisine_list = self.create_option_menu('Cuisine', list(self.cuisines.keys()))
-
         self.cuisine = self.create_entries('Cuisine Value')
         self.price = self.create_entries('Price', "K SP")
         self.location = self.create_entries('Location', "KM")
@@ -134,7 +133,8 @@ class Gui:
 
         for each_item in range(len(data)):
             cuisines_list.insert(END, data[each_item])
-            cuisines_list.itemconfig(each_item, bg="#DDDDDD" if each_item % 2 == 0 else "#CDCDCD")
+            cuisines_list.itemconfig(each_item, bg="#DDDDDD" if each_item %
+                                     2 == 0 else "#CDCDCD")
         scrollbar.config(command=cuisines_list.yview)
 
         return cuisines_list
