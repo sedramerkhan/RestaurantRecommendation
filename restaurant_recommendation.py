@@ -15,7 +15,7 @@ class RestaurantRecommendation:
         self.price = ctrl.Antecedent(
             np.arange(self.price_range[0], self.price_range[1]+1, 1), 'price')
 
-        self.price['cheap'] = fuzz.trapmf(self.price.universe, [10, 10, 30,40])
+        self.price['cheap'] = fuzz.trapmf(self.price.universe, [10, 10, 30, 40])
         self.price['affordable'] = fuzz.trimf(self.price.universe, [20, 40, 60])
         self.price['expensive'] = fuzz.trimf(self.price.universe, [40, 60, 80])
         self.price['very_expensive'] = fuzz.trapmf(self.price.universe, [60, 100, 150, 150])
@@ -28,7 +28,8 @@ class RestaurantRecommendation:
         self.cuisine = ctrl.Antecedent(
             np.arange(self.cuisine_range[0], self.cuisine_range[1]+step, step), 'cuisine')
 
-        self.cuisine['bad'] = fuzz.trimf(self.cuisine.universe, [self.cuisine_range[0], self.cuisine_range[0],3])
+        self.cuisine['bad'] = fuzz.trimf(
+            self.cuisine.universe, [self.cuisine_range[0], self.cuisine_range[0], 3])
         self.cuisine['acceptable'] = fuzz.trimf(self.cuisine.universe, [2.5, 3.25, 4])
         self.cuisine['good'] = fuzz.trimf(self.cuisine.universe, [3.7, 5, 5])
         fig, _ = FuzzyVariableVisualizer(self.cuisine).view()
@@ -38,7 +39,7 @@ class RestaurantRecommendation:
         self.location = ctrl.Antecedent(
             np.arange(self.location_range[0], self.location_range[1]+.5, 0.5), 'location')
 
-        self.location['close'] = fuzz.trapmf(self.location.universe, [0, 0,3, 5])
+        self.location['close'] = fuzz.trapmf(self.location.universe, [0, 0, 3, 5])
         self.location['normal'] = fuzz.trimf(self.location.universe, [2, 6, 10])
         self.location['far'] = fuzz.trimf(self.location.universe, [6, 11, 15])
         self.location['very_far'] = fuzz.trimf(self.location.universe, [14, 20, 20])
@@ -46,7 +47,7 @@ class RestaurantRecommendation:
         plt.savefig(images_paths['location'])
 
         self.recommendation = ctrl.Consequent(
-            np.arange(0, 10.5, 0.5), 'recommendation')
+            np.arange(0, 10.5, 0.5), 'recommendation', defuzzify_method='centroid')
 
         self.recommendation['bad'] = fuzz.trimf(
             self.recommendation.universe, [0, 0, 4])
