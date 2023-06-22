@@ -30,7 +30,6 @@ class GMap():
 
     def define_commands(self):
         def left_click_event(coordinates):
-            print("coordinates:", coordinates)
 
             min_res = min(
                 self.restaurants,
@@ -39,9 +38,10 @@ class GMap():
                 )
             )
 
-            if self.cal_distance(coordinates, (min_res['lat'], min_res['lon'])) > 0.4:
+            if self.cal_distance(coordinates, (min_res['lat'], min_res['lon'])) > 1:
                 return
 
+            print("Restaurant name:", min_res['name'])
             distance = self.cal_distance(self.my_position, (min_res['lat'], min_res['lon']))
 
             self.set_gui_field_val('location', round(distance, 1))
@@ -72,10 +72,6 @@ class GMap():
         lat2, lon2 = radians(c2[0]), radians(c2[1])
 
         return acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
-
-    def load_restaurants(self, path):
-        df = pd.read_csv(path)
-        return df.to_dict(orient='records')
 
     def get_widget(self):
         return self.map_widget
