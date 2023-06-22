@@ -1,10 +1,12 @@
 import tkinter
 import tkintermapview
-import pandas as pd
+
+UMAYYIN_POS = (33.5138062, 36.2765261)
+ITE_POS = (33.4928347, 36.315426)
 
 
 class GMap():
-    def __init__(self, master_gui, cuisines, restaurants, height, width, my_position=(33.4928347, 36.315426)):
+    def __init__(self, master_gui, cuisines, restaurants, height, width, my_position=ITE_POS):
         self.master_gui = master_gui
         self.cuisines = cuisines
         self.restaurants = restaurants
