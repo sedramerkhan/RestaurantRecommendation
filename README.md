@@ -1,4 +1,4 @@
-# RestaurantRecommendation
+# Restaurant Recommendation System
 
 When a person decides to go to a restaurant, he may feel confused due to the large number of choices available,
 as there are many diverse restaurants in terms of their prices, meals, and locations. He searches for the best food for the best price and the shortest distance. 
